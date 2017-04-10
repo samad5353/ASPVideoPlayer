@@ -166,6 +166,7 @@ A simple UIView subclass that can play a video and allows animations to be appli
 			videoPlayerLayer.videoGravity = videoGravity
 			
 			videoPlayerLayer.player?.addObserver(self, forKeyPath: "status", options: [], context: nil)
+            videoPlayerLayer.player?.addObserver(self, forKeyPath: "rate", options: [], context: nil)
 			
 			status = .new
 			newVideo?()
@@ -357,6 +358,13 @@ A simple UIView subclass that can play a video and allows animations to be appli
 				error?(videoError)
 			}
 		}
+        if player == videoPlayerLayer.player && keyPath == "rate" {
+            if player.rate == 0 && progress < 1 {
+                if UIApplication.shared.applicationState == .active {
+                    finishedVideo?()
+                }
+            }
+        }
 	}
 	
 	//MARK: - Private methods -
